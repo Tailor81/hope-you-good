@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-color: #f0f4f8;
+    --text-color: #2c3e50;
+    --accent-color: #3498db;
+    --heart-color: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+.container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: all 0.5s ease;
+}
+
+.container:hover {
+    transform: rotateX(10deg) rotateY(-10deg) scale(1.02);
+}
+
+.greeting-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.greeting-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--accent-color);
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.greeting-section p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    opacity: 0;
+    animation: slideUp 1s forwards;
+}
+
+.heart-container {
+    position: relative;
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e74c3c" stroke="%23c0392b" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center/contain;
+    top: -20px;
+    animation: fallHeart 3s linear infinite;
+    opacity: 0.7;
+}
+
+.interaction-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#moodButton {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+#moodButton:hover {
+    transform: scale(1.05);
+    background-color: #2980b9;
+}
+
+.mood-response {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.mood-reveal {
+    opacity: 1;
+}
+
+.sparkle-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: sparkle 1s ease-out;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fallHeart {
+    to { 
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+@keyframes sparkle {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .greeting-section h1 {
+        font-size: 2rem;
+    }
+
+    .greeting-section p {
+        font-size: 1rem;
+    }
+}
