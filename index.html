@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendly Greeting</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="greeting-section">
+            <h1 id="greeting">Hi there!</h1>
+            <p id="subGreeting">How are you doing?</p>
+            <p id="hopefulMessage">Hope you're awesome today!</p>
+        </div>
+
+        <div class="heart-container">
+            <div class="hearts" id="heartAnimation"></div>
+        </div>
+
+        <div class="interaction-zone">
+            <button id="moodButton">What's Your Mood?</button>
+            <div id="moodResponse" class="mood-response"></div>
+        </div>
+
+        <div class="sparkle-background"></div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Typing Effect
+        const typeWriter = (element, text, speed = 50) => {
+            element.textContent = '';
+            let i = 0;
+            const typing = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typing);
+                }
+            }, speed);
+        };
+
+        // Animate Greetings
+        const greetingEl = document.getElementById('greeting');
+        const subGreetingEl = document.getElementById('subGreeting');
+        const hopefulMessageEl = document.getElementById('hopefulMessage');
+
+        setTimeout(() => typeWriter(greetingEl, 'Hi there!'), 500);
+        setTimeout(() => typeWriter(subGreetingEl, 'How are you doing?'), 1500);
+        setTimeout(() => typeWriter(hopefulMessageEl, 'Hope you're awesome today!'), 2500);
+
+        // Heart Animation
+        const heartContainer = document.getElementById('heartAnimation');
+        const createHeart = () => {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${Math.random() * 100}%`;
+            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            heartContainer.appendChild(heart);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        };
+
+        // Generate hearts periodically
+        setInterval(createHeart, 500);
+
+        // Mood Interaction
+        const moodButton = document.getElementById('moodButton');
+        const moodResponse = document.getElementById('moodResponse');
+        const moods = [
+            'Feeling awesome! 🌟',
+            'Doing great! 💪',
+            'Pretty cool today! 😎',
+            'Vibing positively! 🚀',
+            'Totally crushing it! 🌈'
+        ];
+
+        moodButton.addEventListener('click', () => {
+            const randomMood = moods[Math.floor(Math.random() * moods.length)];
+            moodResponse.textContent = randomMood;
+            moodResponse.classList.add('mood-reveal');
+            
+            setTimeout(() => {
+                moodResponse.classList.remove('mood-reveal');
+            }, 3000);
+        });
+
+        // Sparkle Background Interaction
+        const sparkleBackground = document.querySelector('.sparkle-background');
+        sparkleBackground.addEventListener('mousemove', (e) => {
+            const sparkle = document.createElement('span');
+            sparkle.classList.add('sparkle');
+            sparkle.style.left = `${e.clientX}px`;
+            sparkle.style.top = `${e.clientY}px`;
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1000);
+        });
+    });
+    </script>
+</body>
+</html>
