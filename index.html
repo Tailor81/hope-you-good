@@ -3,107 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friendly Greeting</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>Magical Greeting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --background-color: #f4f5f7;
+            --text-color: #333;
+            --heart-color: #ff4d4d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-color) 0%, #e6e9f0 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            transition: all 0.6s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        #messageDisplay {
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .message {
+            position: absolute;
+            font-size: 2rem;
+            color: var(--text-color);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .message.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .message.final {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .click-me-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(37, 117, 252, 0.4);
+        }
+
+        .click-me-btn:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Floating Hearts */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff4d4d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center/contain;
+            animation: floatUp 5s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 0.8; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* Fireworks */
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            pointer-events: none;
+            animation: firework 1s linear forwards;
+        }
+
+        @keyframes firework {
+            0% { transform: translate(var(--x), var(--y)) scale(0); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(5); opacity: 0; }
+        }
+
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="greeting-section">
-            <h1 id="greeting">Hi there!</h1>
-            <p id="subGreeting">How are you doing?</p>
-            <p id="hopefulMessage">Hope you're awesome today!</p>
+        <div id="messageDisplay">
+            <div id="message1" class="message active">Hi</div>
+            <div id="message2" class="message">How are you?</div>
+            <div id="message3" class="message">Hope you're good</div>
+            <div id="finalMessage" class="message final">Hope you had an amazing week!</div>
         </div>
-
-        <div class="heart-container">
-            <div class="hearts" id="heartAnimation"></div>
-        </div>
-
-        <div class="interaction-zone">
-            <button id="moodButton">What's Your Mood?</button>
-            <div id="moodResponse" class="mood-response"></div>
-        </div>
-
-        <div class="sparkle-background"></div>
+        <button id="clickMeBtn" class="click-me-btn">Click Me</button>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Typing Effect
-        const typeWriter = (element, text, speed = 50) => {
-            element.textContent = '';
-            let i = 0;
-            const typing = setInterval(() => {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(typing);
-                }
-            }, speed);
-        };
-
-        // Animate Greetings
-        const greetingEl = document.getElementById('greeting');
-        const subGreetingEl = document.getElementById('subGreeting');
-        const hopefulMessageEl = document.getElementById('hopefulMessage');
-
-        setTimeout(() => typeWriter(greetingEl, 'Hi there!'), 500);
-        setTimeout(() => typeWriter(subGreetingEl, 'How are you doing?'), 1500);
-        setTimeout(() => typeWriter(hopefulMessageEl, 'Hope you're awesome today!'), 2500);
-
-        // Heart Animation
-        const heartContainer = document.getElementById('heartAnimation');
-        const createHeart = () => {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = `${Math.random() * 100}%`;
-            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
-            heartContainer.appendChild(heart);
-
-            heart.addEventListener('animationend', () => {
-                heart.remove();
-            });
-        };
-
-        // Generate hearts periodically
-        setInterval(createHeart, 500);
-
-        // Mood Interaction
-        const moodButton = document.getElementById('moodButton');
-        const moodResponse = document.getElementById('moodResponse');
-        const moods = [
-            'Feeling awesome! 🌟',
-            'Doing great! 💪',
-            'Pretty cool today! 😎',
-            'Vibing positively! 🚀',
-            'Totally crushing it! 🌈'
+        const messages = [
+            document.getElementById('message1'),
+            document.getElementById('message2'),
+            document.getElementById('message3'),
+            document.getElementById('finalMessage')
         ];
 
-        moodButton.addEventListener('click', () => {
-            const randomMood = moods[Math.floor(Math.random() * moods.length)];
-            moodResponse.textContent = randomMood;
-            moodResponse.classList.add('mood-reveal');
-            
-            setTimeout(() => {
-                moodResponse.classList.remove('mood-reveal');
-            }, 3000);
-        });
+        let currentMessageIndex = 0;
 
-        // Sparkle Background Interaction
-        const sparkleBackground = document.querySelector('.sparkle-background');
-        sparkleBackground.addEventListener('mousemove', (e) => {
-            const sparkle = document.createElement('span');
-            sparkle.classList.add('sparkle');
-            sparkle.style.left = `${e.clientX}px`;
-            sparkle.style.top = `${e.clientY}px`;
-            document.body.appendChild(sparkle);
+        function showNextMessage() {
+            messages[currentMessageIndex].classList.remove('active');
 
-            setTimeout(() => {
-                sparkle.remove();
-            }, 1000);
-        });
-    });
+            currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+
+            messages[currentMessageIndex].classList.add('active');
+
+            if (currentMessageIndex === messages.length - 1) {
+                messages[currentMessageIndex].style.animation = 'finalMessagePop 1s ease-in-out';
+                createFireworks();
+            }
+        }
+
+        function createFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.top = "100vh";
+                heart.style.animationDuration = Math.random() * 3 + 2 + "s";
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 5000);
+            }, 500);
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 50; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                firework.style.setProperty('--x', `${Math.random() * window.innerWidth - window.innerWidth / 2}px`);
+                firework.style.setProperty('--y', `${Math.random() * window.innerHeight - window.innerHeight / 2}px`);
+                document.body.appendChild(firework);
+
+                setTimeout(() => firework.remove(), 1000);
+            }
+        }
+
+        document.getElementById('clickMeBtn').addEventListener('click', showNextMessage);
+
+        createFloatingHearts();
     </script>
 </body>
 </html>
